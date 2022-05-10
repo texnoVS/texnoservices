@@ -1,0 +1,57 @@
+version: '3.7'
+
+services:
+  postgres-customer:
+    image: postgres:latest
+    container_name: postgres_customer
+    environment:
+      POSTGRES_USER: customer
+      POSTGRES_PASSWORD: 1221
+      POSTGRES_DB: customer
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/texnoservices/customer/postgres
+    ports:
+      - "5433:5432"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+  postgres-fraud:
+    image: postgres:latest
+    container_name: postgres_fraud
+    environment:
+      POSTGRES_USER: fraud
+      POSTGRES_PASSWORD: 1221
+      POSTGRES_DB: fraud
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/texnoservices/fraud/postgres
+    ports:
+      - "5434:5432"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+  postgres-notification:
+    image: postgres:latest
+    container_name: postgres_notification
+    environment:
+      POSTGRES_USER: notification
+      POSTGRES_PASSWORD: 1221
+      POSTGRES_DB: notification
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/texnoservices/fraud/postgres
+    ports:
+      - "5435:5432"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+networks:
+  postgres:
+    driver: bridge
+
+volumes:
+  postgres:
