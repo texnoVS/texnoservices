@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.8'
 
 services:
   postgres-customer:
@@ -16,7 +16,6 @@ services:
     networks:
       - postgres
     restart: unless-stopped
-
   postgres-fraud:
     image: postgres:latest
     container_name: postgres_fraud
@@ -32,7 +31,6 @@ services:
     networks:
       - postgres
     restart: unless-stopped
-
   postgres-notification:
     image: postgres:latest
     container_name: postgres_notification
@@ -48,6 +46,11 @@ services:
     networks:
       - postgres
     restart: unless-stopped
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - "9411:9411"
 
 networks:
   postgres:
