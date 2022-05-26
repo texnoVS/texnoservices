@@ -1,13 +1,13 @@
 server:
-  port: 8081
+  port: 8092
 
 spring:
   application:
     name: fraud
   datasource:
-    url: jdbc:postgresql://localhost:5434/fraud
-    username: fraud
-    password: 1221
+    url: jdbc:postgresql://localhost:5432/texnoservices_fraud
+    username: postgres
+    password: 101971
   jpa:
     show-sql: true
     hibernate:
