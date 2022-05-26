@@ -1,13 +1,13 @@
 server:
-  port: 8090
+  port: 8096
 
 spring:
   application:
     name: notification
   datasource:
-    url: jdbc:postgresql://localhost:5435/notification
-    username: notification
-    password: 1221
+    url: jdbc:postgresql://localhost:5432/texnoservices_notification
+    username: postgres
+    password: 101971
   jpa:
     show-sql: true
     hibernate:
@@ -18,6 +18,25 @@ spring:
         format_sql: 'true'
   zipkin:
     base-url: http://localhost:9411
+  kafka:
+    bootstrap-servers: "localhost:9092"
+    streams:
+      replication-factor: 1
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      group-id: texno-notification
+      properties:
+        spring:
+          json:
+            use:
+              type:
+                headers: true
+            trusted:
+              packages: "*"
 
 eureka:
   client:
@@ -25,6 +44,10 @@ eureka:
       defaultZone: http://localhost:8761/eureka
     fetch-registry: true
     register-with-eureka: true
+
+kafka:
+  topics:
+    notification: "notification"
 
 logging:
   level:

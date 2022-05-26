@@ -2,9 +2,10 @@ package com.texno.customer;
 
 import com.texno.clients.fraud.FraudCheckResponse;
 import com.texno.clients.fraud.FraudClient;
-import com.texno.clients.notification.NotificationClient;
 import com.texno.clients.notification.NotificationRequest;
+import com.texno.customer.kafka.KafkaProducer;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,8 +15,11 @@ public class CustomerServiceImpl implements CustomerService {
     private static final String SENDER = "Texno";
 
     private final FraudClient fraudClient;
-    private final NotificationClient notificationClient;
     private final CustomerRepository customerRepository;
+    private final KafkaProducer kafkaProducer;
+
+    @Value("${kafka.topics.notification}")
+    private String notificationTopicName;
 
     @Override
     public void registerCustomer(CustomerRegistrationRequest request) {
@@ -36,9 +40,8 @@ public class CustomerServiceImpl implements CustomerService {
             throw new IllegalStateException("Customer is fraudster");
         }
 
-        // todo: make it async. i.e add to queue
-        notificationClient.sendNotification(
-                new NotificationRequest(getMessage(customer.getFirstName()), SENDER, customer.getEmail(), customer.getId()));
+        kafkaProducer.send(notificationTopicName,
+                           new NotificationRequest(getMessage(customer.getFirstName()), SENDER, customer.getEmail(), customer.getId()));
     }
 
     private String getMessage(String name) {

@@ -1,60 +1,76 @@
 version: '3.8'
 
 services:
-  postgres-customer:
-    image: postgres:latest
-    container_name: postgres_customer
-    environment:
-      POSTGRES_USER: customer
-      POSTGRES_PASSWORD: 1221
-      POSTGRES_DB: customer
-      PGDATA: /data/postgres
-    volumes:
-      - postgres:/data/texnoservices/customer/postgres
-    ports:
-      - "5433:5432"
-    networks:
-      - postgres
-    restart: unless-stopped
-  postgres-fraud:
-    image: postgres:latest
-    container_name: postgres_fraud
-    environment:
-      POSTGRES_USER: fraud
-      POSTGRES_PASSWORD: 1221
-      POSTGRES_DB: fraud
-      PGDATA: /data/postgres
-    volumes:
-      - postgres:/data/texnoservices/fraud/postgres
-    ports:
-      - "5434:5432"
-    networks:
-      - postgres
-    restart: unless-stopped
-  postgres-notification:
-    image: postgres:latest
-    container_name: postgres_notification
-    environment:
-      POSTGRES_USER: notification
-      POSTGRES_PASSWORD: 1221
-      POSTGRES_DB: notification
-      PGDATA: /data/postgres
-    volumes:
-      - postgres:/data/texnoservices/fraud/postgres
-    ports:
-      - "5435:5432"
-    networks:
-      - postgres
-    restart: unless-stopped
   zipkin:
     image: openzipkin/zipkin
     container_name: zipkin
     ports:
       - "9411:9411"
+  kafka:
+    image: landoop/fast-data-dev:latest
+    container_name: kafka
+    ports:
+      - "9092:9092"
+      - "8081:8081"
+      - "8082:8082"
+      - "8083:8083"
+      - "2181:2181"
+      - "3030:3030"
+      - "9581-9585:9581-9585"
+    environment:
+      - ADV_HOST=localhost
 
-networks:
-  postgres:
-    driver: bridge
 
-volumes:
-  postgres:
+#networks:
+#  postgres:
+#    driver: bridge
+#
+#volumes:
+#  postgres:
+
+
+#  postgres-customer:
+#    image: postgres:latest
+#    container_name: postgres_customer
+#    environment:
+#      POSTGRES_USER: customer
+#      POSTGRES_PASSWORD: 1221
+#      POSTGRES_DB: customer
+#      PGDATA: /data/postgres
+#    volumes:
+#      - postgres:/data/texnoservices/customer/postgres
+#    ports:
+#      - "5433:5432"
+#    networks:
+#      - postgres
+#    restart: unless-stopped
+#  postgres-fraud:
+#    image: postgres:latest
+#    container_name: postgres_fraud
+#    environment:
+#      POSTGRES_USER: fraud
+#      POSTGRES_PASSWORD: 1221
+#      POSTGRES_DB: fraud
+#      PGDATA: /data/postgres
+#    volumes:
+#      - postgres:/data/texnoservices/fraud/postgres
+#    ports:
+#      - "5434:5432"
+#    networks:
+#      - postgres
+#    restart: unless-stopped
+#  postgres-notification:
+#    image: postgres:latest
+#    container_name: postgres_notification
+#    environment:
+#      POSTGRES_USER: notification
+#      POSTGRES_PASSWORD: 1221
+#      POSTGRES_DB: notification
+#      PGDATA: /data/postgres
+#    volumes:
+#      - postgres:/data/texnoservices/fraud/postgres
+#    ports:
+#      - "5435:5432"
+#    networks:
+#      - postgres
+#    restart: unless-stopped
